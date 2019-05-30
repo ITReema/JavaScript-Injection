@@ -20,6 +20,7 @@ class ActionViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add))
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -49,6 +50,17 @@ class ActionViewController: UIViewController {
         item.attachments = [customJavaScript]
         
         extensionContext?.completeRequest(returningItems: [item])
+    }
+    
+    @IBAction func add() {
+        let ac = UIAlertController(title: "Scripts", message: nil, preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "alert(document.title);", style: .default) { [weak self] (action) in
+            self?.script.text = action.title })
+        ac.addAction(UIAlertAction(title: "alert(document.URL);", style: .default) { [weak self] (action) in
+            self?.script.text = action.title})
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(ac, animated: true)
     }
     
     @objc func adjustForKeyboard(notification: Notification) {
